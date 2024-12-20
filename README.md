@@ -1,3 +1,6 @@
+Student_id = 21B030697
+Student = Malikov Temirlan
+
 Angular Final Exam, Fall 2024
 
 3 tasks, each task 33% of 20 points. ~6.6

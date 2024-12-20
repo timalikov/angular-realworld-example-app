@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Observable, BehaviorSubject } from "rxjs";
-
-import { JwtService } from "./jwt.service";
+import { Observable, BehaviorSubject, of } from "rxjs";
 import { map, distinctUntilChanged, tap, shareReplay } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { User } from "../user.model";
 import { Router } from "@angular/router";
+import { JwtService } from "./jwt.service";
+import { mockUser } from "../../../shared/mock-user"; 
 
 @Injectable({ providedIn: "root" })
 export class UserService {
@@ -22,13 +22,16 @@ export class UserService {
     private readonly router: Router,
   ) {}
 
-  login(credentials: { // Task 2
-    email: string;
-    password: string;
-  }): Observable<{ user: User }> {
-    return this.http
-      .post<{ user: User }>("/users/login", { user: credentials })
-      .pipe(tap(({ user }) => this.setAuth(user)));
+  // Updated login method for Task 2
+  login(credentials: { email: string; password: string }): Observable<{ user: User }> {
+    // Mock implementation: user using mockUser and return it as an observable
+    const user: User = {
+      ...mockUser,
+      email: credentials.email,
+      token: "mockToken",
+    };
+    this.setAuth(user);
+    return of({ user });
   }
 
   register(credentials: {

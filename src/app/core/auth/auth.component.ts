@@ -63,29 +63,34 @@ export default class AuthComponent implements OnInit {
     }
   }
 
-  submitForm(): void { // you need this for Task 2
+  submitForm(): void { 
     this.isSubmitting = true;
     this.errors = { errors: {} };
-
-    let observable =
-      this.authType === "login"
-        ? this.userService.login(
-            this.authForm.value as { email: string; password: string },
-          )
-        : this.userService.register(
-            this.authForm.value as {
-              email: string;
-              password: string;
-              username: string;
-            },
-          );
-
+  
+    let observable;
+  
+    if (this.authType === "login") {
+      observable = this.userService.login(
+        this.authForm.value as { email: string; password: string }
+      );
+    } else {
+      observable = this.userService.register(
+        this.authForm.value as {
+          email: string;
+          password: string;
+          username: string;
+        }
+      );
+    }
+  
     observable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => void this.router.navigate(["/"]),
+      next: () => {
+        void this.router.navigate(["/"]);
+      },
       error: (err) => {
         this.errors = err;
         this.isSubmitting = false;
       },
-    });
+    });  
   }
 }

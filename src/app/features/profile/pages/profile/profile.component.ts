@@ -6,61 +6,43 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from "@angular/router";
-import { catchError, switchMap } from "rxjs/operators";
-import { combineLatest, of, throwError } from "rxjs";
-import { UserService } from "../../../../core/auth/services/user.service";
-import { Profile } from "../../models/profile.model";
-import { ProfileService } from "../../services/profile.service";
 import { AsyncPipe, NgIf } from "@angular/common";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FollowButtonComponent } from "../../components/follow-button.component";
+import { mockUser } from "../../../../shared/mock-user";
 
 @Component({
   selector: "app-profile-page",
-  templateUrl: "./profile.component.html",
+  template: `
+    <div *ngIf="isValidUser; else wrongUserTemplate">
+      <h1>{{ profile.username }}'s Profile</h1>
+      <p>{{ profile.bio }}</p>
+      <img [src]="profile.image" alt="Profile Picture" />
+      <router-outlet></router-outlet>
+    </div>
+    <ng-template #wrongUserTemplate>
+      <h1>Wrong user</h1>
+    </ng-template>
+  `,
   imports: [
-    FollowButtonComponent,
     NgIf,
     RouterLink,
     AsyncPipe,
     RouterLinkActive,
     RouterOutlet,
-    FollowButtonComponent,
   ],
   standalone: true,
 })
 export class ProfileComponent implements OnInit {
-  profile!: Profile;
-  isUser: boolean = false;
+  profile = mockUser; 
+  isValidUser: boolean = false; 
   destroyRef = inject(DestroyRef);
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly userService: UserService,
-    private readonly profileService: ProfileService,
-  ) {}
+  constructor(private readonly route: ActivatedRoute, private readonly router: Router) {}
 
-  ngOnInit() { // You need to modify this for Task 3
-    this.profileService
-      .get(this.route.snapshot.params["username"])
-      .pipe(
-        // catchError((error) => {
-        //   void this.router.navigate(["/"]);
-        //   return throwError(() => error);
-        // }),
-        switchMap((profile) => {
-          return combineLatest([of(profile), this.userService.currentUser]);
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(([profile, user]) => {
-        this.profile = profile;
-        this.isUser = profile.username === user?.username;
-      });
-  }
-
-  onToggleFollowing(profile: Profile) {
-    this.profile = profile;
+  ngOnInit() {
+    const username = this.route.snapshot.params["username"]; // Get :username from route
+    this.isValidUser = username === mockUser.username; // Validate against mockUser
+    if (this.isValidUser) {
+      this.profile = mockUser; // Set profile to mockUser if valid
+    }
   }
 }
