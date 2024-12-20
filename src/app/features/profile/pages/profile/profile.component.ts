@@ -41,14 +41,14 @@ export class ProfileComponent implements OnInit {
     private readonly profileService: ProfileService,
   ) {}
 
-  ngOnInit() {
+  ngOnInit() { // You need to modify this for Task 3
     this.profileService
       .get(this.route.snapshot.params["username"])
       .pipe(
-        catchError((error) => {
-          void this.router.navigate(["/"]);
-          return throwError(() => error);
-        }),
+        // catchError((error) => {
+        //   void this.router.navigate(["/"]);
+        //   return throwError(() => error);
+        // }),
         switchMap((profile) => {
           return combineLatest([of(profile), this.userService.currentUser]);
         }),

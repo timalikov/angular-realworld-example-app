@@ -63,7 +63,7 @@ export default class AuthComponent implements OnInit {
     }
   }
 
-  submitForm(): void {
+  submitForm(): void { // you need this for Task 2
     this.isSubmitting = true;
     this.errors = { errors: {} };
 

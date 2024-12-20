@@ -18,14 +18,14 @@ export const routes: Routes = [
   {
     path: "register",
     loadComponent: () => import("./core/auth/auth.component"),
-    canActivate: [
-      () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
-    ],
+    // canActivate: [
+    //   () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
+    // ],
   },
   {
     path: "settings",
     loadComponent: () => import("./features/settings/settings.component"),
-    canActivate: [() => inject(UserService).isAuthenticated],
+    // canActivate: [() => inject(UserService).isAuthenticated],
   },
   {
     path: "profile",
@@ -38,13 +38,13 @@ export const routes: Routes = [
         path: "",
         loadComponent: () =>
           import("./features/article/pages/editor/editor.component"),
-        canActivate: [() => inject(UserService).isAuthenticated],
+        // canActivate: [() => inject(UserService).isAuthenticated],
       },
       {
         path: ":slug",
         loadComponent: () =>
           import("./features/article/pages/editor/editor.component"),
-        canActivate: [() => inject(UserService).isAuthenticated],
+        // canActivate: [() => inject(UserService).isAuthenticated],
       },
     ],
   },

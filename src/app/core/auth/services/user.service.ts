@@ -22,7 +22,7 @@ export class UserService {
     private readonly router: Router,
   ) {}
 
-  login(credentials: {
+  login(credentials: { // Task 2
     email: string;
     password: string;
   }): Observable<{ user: User }> {
